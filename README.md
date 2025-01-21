@@ -1,7 +1,19 @@
 # UdonPoints
 A spiritual successor to UdonChips focused on modularity and simplicity.
 
-[![Discord](https://img.shields.io/discord/887157106472550422.svg?color=%237289da&label=discord&style=for-the-badge)](https://discord.gg/WF3B2r4xby) 
+[![Discord](https://img.shields.io/discord/887157106472550422.svg?color=%237289da&label=discord&style=for-the-badge)](https://discord.gg/WF3B2r4xby)
+
+## What Is This?
+
+UdonPoints is a points/money system for VRChat written in UdonSharp. It is designed to extend on the features of UdonChips. UdonPoints features systems such as:
+
++ Easy Setup
++ Points Management
++ Networking
++ Easy Developer API
++ ...and much more!
+
+UdonPoints has many use-cases and I am excited to see what people use it for!
 
 ## Getting Started
 
