@@ -20,6 +20,7 @@ namespace UdonPoints.Networking
 
         public decimal[] remoteMoney;
         private double[] lastMoney;
+        private VRCPlayerApi lastOwner;
 
         public VRCPlayerApi GetOwner() => VRC.SDKBase.Networking.GetOwner(gameObject);
 
@@ -43,15 +44,26 @@ namespace UdonPoints.Networking
 
         public decimal GetRawMoney(string n) => GetRawMoney(GetIndexFromName(n));
 
+        public override bool OnOwnershipRequest(VRCPlayerApi requestingPlayer, VRCPlayerApi requestedOwner)
+        {
+            if (!requestingPlayer.isMaster)
+            {
+                Manager.Logger.LogError("Could not transfer ownership from " + requestingPlayer.displayName + "(" + requestingPlayer.playerId + ")");
+                return false;
+            }
+            return true;
+        }
+
+        public override void OnPlayerJoined(VRCPlayerApi player) => OnMoneyUpdate(true);
+
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
-            VRCPlayerApi localPlayer = VRC.SDKBase.Networking.LocalPlayer;
-            if(localPlayer == null || !localPlayer.isMaster) return;
+            if(Manager.LocalPlayer == null || !Manager.LocalPlayer.isMaster) return;
             VRCPlayerApi owner = GetOwner();
             // Owner just left the instance
             if(owner == null) return;
             if(GetOwner().playerId != player.playerId) return;
-            VRC.SDKBase.Networking.SetOwner(localPlayer, gameObject);
+            VRC.SDKBase.Networking.SetOwner(Manager.LocalPlayer, gameObject);
         }
 
         public override void OnPostSerialization(SerializationResult result)
@@ -73,10 +85,9 @@ namespace UdonPoints.Networking
             Array.Copy(rawMoney, remoteMoney, rawMoney.Length);
         }
 
-        private void Update()
+        internal void OnMoneyUpdate(bool force = false)
         {
-            VRCPlayerApi localPlayer = VRC.SDKBase.Networking.LocalPlayer;
-            if(localPlayer.playerId != GetOwner().playerId) return;
+            if(Manager.LocalPlayer.playerId != GetOwner().playerId) return;
             MoneyNames = Manager.GetAllMoneyNames();
             bool requestUpdate = false;
             if (Money == null || Money.Length != MoneyNames.Length)
@@ -101,9 +112,16 @@ namespace UdonPoints.Networking
                 requestUpdate = true;
             }
             Array.Copy(Money, lastMoney, Money.Length);
-            if(!requestUpdate) return;
+            if(!requestUpdate && !force) return;
             RawMoney = localMoney.ToBytes();
             RequestSerialization();
+        }
+
+        private void LateUpdate()
+        {
+            VRCPlayerApi currentOwner = GetOwner();
+            if(lastOwner != currentOwner) OnMoneyUpdate(true);
+            lastOwner = currentOwner;
         }
     }
 }

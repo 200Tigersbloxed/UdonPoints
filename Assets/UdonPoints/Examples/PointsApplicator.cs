@@ -48,7 +48,7 @@ namespace UdonPoints.Examples
             {
                 if (NetworkFeatures)
                 {
-                    VRCPlayerApi localPlayer = VRC.SDKBase.Networking.LocalPlayer;
+                    VRCPlayerApi localPlayer = Manager.LocalPlayer;
                     VRCPlayerApi owner = VRC.SDKBase.Networking.GetOwner(gameObject);
                     if (localPlayer.playerId == owner.playerId)
                     {
@@ -74,7 +74,7 @@ namespace UdonPoints.Examples
             {
                 if (NetworkFeatures)
                 {
-                    VRCPlayerApi localPlayer = VRC.SDKBase.Networking.LocalPlayer;
+                    VRCPlayerApi localPlayer = Manager.LocalPlayer;
                     VRCPlayerApi owner = VRC.SDKBase.Networking.GetOwner(gameObject);
                     if (localPlayer.playerId == owner.playerId)
                     {
@@ -113,7 +113,7 @@ namespace UdonPoints.Examples
         private void LoadData()
         {
             if(NetworkFeatures || !Persistence || string.IsNullOrEmpty(PersistenceGUID)) return;
-            VRCPlayerApi localPlayer = VRC.SDKBase.Networking.LocalPlayer;
+            VRCPlayerApi localPlayer = Manager.LocalPlayer;
             bool hasData = PlayerData.HasKey(localPlayer, PersistenceGUID);
             if(!hasData) return;
             bool hidden = PlayerData.GetBool(localPlayer, PersistenceGUID);
@@ -241,7 +241,7 @@ namespace UdonPoints.Examples
 
         public void _ShowAfterSeconds()
         {
-            VRCPlayerApi localPlayer = VRC.SDKBase.Networking.LocalPlayer;
+            VRCPlayerApi localPlayer = Manager.LocalPlayer;
             VRCPlayerApi owner = VRC.SDKBase.Networking.GetOwner(gameObject);
             if(localPlayer.playerId != owner.playerId) return;
             if(NetworkFeatures)
@@ -252,7 +252,7 @@ namespace UdonPoints.Examples
         
         public void _HideAfterSeconds()
         {
-            VRCPlayerApi localPlayer = VRC.SDKBase.Networking.LocalPlayer;
+            VRCPlayerApi localPlayer = Manager.LocalPlayer;
             VRCPlayerApi owner = VRC.SDKBase.Networking.GetOwner(gameObject);
             if(localPlayer.playerId != owner.playerId) return;
             if(NetworkFeatures)

@@ -1,4 +1,5 @@
 ﻿using UCS;
+using UdonPoints.Networking;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Persistence;
@@ -36,6 +37,11 @@ namespace UdonPoints
                 PlayerData.SetBytes(MoneySafeName, CurrentMoney.ToBytes());
             lastMoney = CurrentMoney;
             Manager.Logger.Log($"Updated money to {CurrentMoney}");
+            foreach (UdonPointsNetworkBehaviour networkBehaviour in Manager.UdonPointsNetworkBehaviours)
+            {
+                if(networkBehaviour.GetOwner() != Manager.LocalPlayer) continue;
+                networkBehaviour.OnMoneyUpdate();
+            }
         }
 
         public override void OnPlayerRestored(VRCPlayerApi player)
@@ -89,6 +95,11 @@ namespace UdonPoints
                 Manager.Logger.Log(HasPlayerData
                     ? $"UdonPointsBehaviour {MoneySafeName} is ready and loaded {CurrentMoney} money!"
                     : $"UdonPointsBehaviour {MoneySafeName} is ready!");
+                foreach (UdonPointsNetworkBehaviour networkBehaviour in Manager.UdonPointsNetworkBehaviours)
+                {
+                    if(networkBehaviour.GetOwner() != Manager.LocalPlayer) continue;
+                    networkBehaviour.OnMoneyUpdate(true);
+                }
             }
             if(!IsReady) return;
             NetworkCheck();

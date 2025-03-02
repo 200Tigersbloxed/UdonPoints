@@ -25,6 +25,7 @@ namespace UdonPoints
             }
         }
         public VRCPlayerApi[] PlayerList = Array.Empty<VRCPlayerApi>();
+        public VRCPlayerApi LocalPlayer;
         
         private string[] moneyNames = new string[0];
 
@@ -157,9 +158,9 @@ namespace UdonPoints
             return null;
         }
 
-        internal void NetworkUpdate(VRCPlayerApi localMasterPlayer, VRCPlayerApi[] allPlayers)
+        private void NetworkUpdate(VRCPlayerApi localMasterPlayer, VRCPlayerApi[] allPlayers)
         {
-            if(!localMasterPlayer.isLocal || !localMasterPlayer.isLocal) return;
+            if(!localMasterPlayer.isLocal) return;
             VRCPlayerApi[] playersWithoutNetworking = PlayersWithoutNetworking(allPlayers);
             foreach (VRCPlayerApi playerNoNetwork in playersWithoutNetworking)
             {
@@ -178,6 +179,8 @@ namespace UdonPoints
             }
         }
 
+        private void Start() => LocalPlayer = VRC.SDKBase.Networking.LocalPlayer;
+
         private void Update()
         {
             EnsureLogger();
@@ -187,11 +190,10 @@ namespace UdonPoints
                 PlayerList = new VRCPlayerApi[playerCount];
                 VRCPlayerApi.GetPlayers(PlayerList);
                 Logger.Log("Refresh PlayerList.");
+                // You have to be the local player and master for this
+                if(!LocalPlayer.isMaster || !LocalPlayer.isLocal) return;
+                NetworkUpdate(LocalPlayer, PlayerList);
             }
-            VRCPlayerApi player = VRC.SDKBase.Networking.LocalPlayer;
-            // You have to be the local player and master for this
-            if(!player.isMaster || !player.isLocal) return;
-            NetworkUpdate(player, PlayerList);
         }
     }
 }
