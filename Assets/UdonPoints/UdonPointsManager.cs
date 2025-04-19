@@ -10,7 +10,7 @@ namespace UdonPoints
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class UdonPointsManager : UdonSharpBehaviour
     {
-        public const string VERSION = "v1.0.0";
+        public const string VERSION = "v1.0.2";
         
         public UdonPointsBehaviour[] UdonPointsBehaviours;
         public UdonPointsNetworkBehaviour[] UdonPointsNetworkBehaviours;
