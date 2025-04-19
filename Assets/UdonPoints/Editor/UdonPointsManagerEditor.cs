@@ -489,6 +489,14 @@ namespace UdonPoints.Editor
                 {
                     GUILayout.Label("Chamchi Logger Integration");
                     GUILayout.Label("Optionally create an integration between Chamchi and UdonPoints.", Subheader);
+                    Rect r = EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight * 1.6f);
+                    EditorGUI.HelpBox(r, "UdonPoints recommends using ReLog for stability and improvements.", MessageType.Warning);
+                    r.x = r.width - 85;
+                    r.width = 100;
+                    r.height -= 10;
+                    r.y += 5;
+                    if(GUI.Button(r, "Open ReLog"))
+                        Application.OpenURL("https://github.com/200Tigersbloxed/ReLog");
 #if UDONPOINTS_CHAMCHI
                     if(GUILayout.Button("Disable Chamchi Integration"))
                         Helper.RemoveScriptingDefineSymbol("UDONPOINTS_CHAMCHI");

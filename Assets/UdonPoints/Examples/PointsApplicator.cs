@@ -41,6 +41,7 @@ namespace UdonPoints.Examples
         private bool hasPickup;
         private bool firstJoinSerialize;
         private bool first = true;
+        private float nextCallTime;
 
         internal void CallOnMoney()
         {
@@ -236,7 +237,6 @@ namespace UdonPoints.Examples
             }
             else if (first)
                 first = false;
-            SendCustomEventDelayedSeconds(nameof(_TimedEvent), TimeApplication);
         }
 
         public void _ShowAfterSeconds()
@@ -301,10 +301,20 @@ namespace UdonPoints.Examples
 
         internal virtual void Start()
         {
+            nextCallTime = Time.time + TimeApplication;
             hasPickup = GetComponent<VRC_Pickup>() != null;
             if (!Persistence)
                 UpdateState(HideAfterCollect);
             _TimedEvent();
+        }
+
+        internal virtual void Update()
+        {
+            if (Time.time >= nextCallTime)
+            {
+                _TimedEvent();
+                nextCallTime = Time.time + TimeApplication;
+            }
         }
     }
 

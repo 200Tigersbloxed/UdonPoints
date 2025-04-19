@@ -147,7 +147,8 @@ namespace UdonPoints.Editor
                 {
                     if(GUILayout.Button("Continue"))
                     {
-                        pointsApplicator.TargetBehaviours = selectedBehaviours.Keys.ToArray();
+                        pointsApplicator.TargetBehaviours =
+                            selectedBehaviours.Where(x => x.Value).Select(pair => pair.Key).ToArray();
                         EditorUtility.SetDirty(pointsApplicator.gameObject);
                     }
                 }

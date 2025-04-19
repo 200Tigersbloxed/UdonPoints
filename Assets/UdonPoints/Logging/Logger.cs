@@ -1,4 +1,7 @@
-﻿using UdonSharp;
+﻿#if RELOG
+using ReLog;
+#endif
+using UdonSharp;
 using UnityEngine;
 
 namespace UdonPoints.Logging
@@ -11,6 +14,10 @@ namespace UdonPoints.Logging
 #if UDONPOINTS_CHAMCHI
         public LogPanel[] LogPanels;
 #endif
+
+#if RELOG
+        public CoreLogger CoreLogger;
+#endif
         
         public void Log(string message)
         {
@@ -19,6 +26,9 @@ namespace UdonPoints.Logging
             {
                 logPanel.Log(Manager, message);
             }
+#endif
+#if RELOG
+            CoreLogger.Log(message);
 #endif
             Debug.Log(message);
         }
@@ -31,6 +41,9 @@ namespace UdonPoints.Logging
                 logPanel.LogWarn(Manager, message);
             }
 #endif
+#if RELOG
+            CoreLogger.LogWarning(message);
+#endif
             Debug.LogWarning(message);
         }
 
@@ -41,6 +54,9 @@ namespace UdonPoints.Logging
             {
                 logPanel.LogError(Manager, message);
             }
+#endif
+#if RELOG
+            CoreLogger.LogError(message);
 #endif
             Debug.LogError(message);
         }
